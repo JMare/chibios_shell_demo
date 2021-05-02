@@ -17,6 +17,8 @@
 #include "ch.h"
 #include "hal.h"
 
+#include "esh.h"
+
 /*
  * This is a periodic thread that does absolutely nothing except flashing
  * a LED.
@@ -49,6 +51,9 @@ int main(void) {
   halInit();
   chSysInit();
 
+  // Initilize the embedded shell for debugging
+  eshInit();
+
   /*
    * Creates the example thread.
    */
@@ -56,6 +61,7 @@ int main(void) {
 
   // Do nothing in the main loop - we will add to this
   while (true) {
+    eshService();
     chThdSleepMilliseconds(500);
   }
 }
