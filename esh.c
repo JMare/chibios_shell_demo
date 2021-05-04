@@ -1,28 +1,25 @@
-#include "esh.h"
-
 #include "ch.h"
 #include "hal.h"
-
 #include "shell.h"
 #include "chprintf.h"
-
 #include "usbcfg.h"
 
-static void cmd_debug(BaseSequentialStream *chp, int argc, char *argv[]) {
+/*
+ ** Example of a application specific shell command
+ */
+static void cmd_example(BaseSequentialStream *chp, int argc, char *argv[]) {
 
   (void)argv;
   if (argc > 0) {
-    chprintf(chp, "Usage: debug\r\n");
+    chprintf(chp, "Usage: example\r\n");
     return;
   }
 
-  chprintf(chp, "\r\nSystem debug display\r\n\r\n");
-
-  //TODO: Implement this debug output
+  chprintf(chp, "Example shell command\r\n");
 }
 
 static const ShellCommand commands[] = {
-                                        {"debug", cmd_debug},
+                                        {"example", cmd_example},
                                         {NULL, NULL}
 };
 
@@ -40,12 +37,10 @@ void eshInit(void)
   sduObjectInit(&SDU1);
   sduStart(&SDU1, &serusbcfg);
 
-  /*
-   * Activates the USB driver and then the USB bus pull-up on D+.
-   * Note, a delay is inserted in order to not have to disconnect the cable
-   * after a reset.
-   */
 
+  /*
+   * If the board was reset while connected to the commputer
+   * this will force a reconnect without needing to replug the cable*/
   usbDisconnectBus(serusbcfg.usbp);
   chThdSleepMilliseconds(1500);
   usbStart(serusbcfg.usbp, &usbcfg);
@@ -56,7 +51,7 @@ void eshInit(void)
 }
 
 /*
-** This should be called periodicly from a low priority thread to spawn a new shell if required or clean up if the shell has exited
+** This should be called periodicly from a low priority thread to spawn a new shell thread if required or clean up if the shell has exited
  */
 void eshService(void)
 {
