@@ -65,14 +65,14 @@ void eshService(void)
   // if the usb is active and the shell is not active, spawn a thread
   if (!shelltp && SDU1.config->usbp->state == USB_ACTIVE && shelltp == NULL)
   {
-    palSetPad(GPIOD, GPIOD_LED5);       /* Red.  */
-    shelltp = chThdCreateFromHeap(NULL, THD_WORKING_AREA_SIZE(128),
+    palSetPad(GPIOD, GPIOD_LED5); // Red light to indicate shell is active
+    shelltp = chThdCreateFromHeap(NULL, THD_WORKING_AREA_SIZE(2048),
                                             "shell", NORMALPRIO + 1,
                                             shellThread, (void *)&shell_cfg1);
   }
   else if(chThdTerminatedX(shelltp))
   {
-    palClearPad(GPIOD, GPIOD_LED5);       /* Red.  */
+    palClearPad(GPIOD, GPIOD_LED5); // Turn off shell indicator light
     chThdRelease(shelltp);
     shelltp = NULL;
   }
