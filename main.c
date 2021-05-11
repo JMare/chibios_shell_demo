@@ -18,6 +18,7 @@
 #include "hal.h"
 
 #include "esh.h"
+#include "logstream.h"
 
 /*
  * This is a periodic thread that does absolutely nothing except flashing
@@ -29,6 +30,7 @@ static THD_FUNCTION(Thread1, arg) {
   (void)arg;
   chRegSetThreadName("blinker");
   while (true) {
+    XPRINTF("Blinking LED\r\n");
     palSetPad(GPIOD, GPIOD_LED3);       /* Orange.  */
     chThdSleepMilliseconds(500);
     palClearPad(GPIOD, GPIOD_LED3);     /* Orange.  */
@@ -54,10 +56,14 @@ int main(void) {
   // Initilize the embedded shell for debugging
   eshInit();
 
+  XPRINTF("ChibiOS Shell Demo Application \n\r");
+
   /*
    * Creates the example thread.
    */
+  XPRINTF("Blinker Thread Created \n\r");
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+
 
   // Do nothing in the main loop - we will add to this
   while (true) {

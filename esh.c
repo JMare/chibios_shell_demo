@@ -4,9 +4,33 @@
 #include "chprintf.h"
 #include "usbcfg.h"
 
-/*
- ** Example of a application specific shell command
- */
+#include "logstream.h"
+
+// This defines how often the logstream command will stop to check for a keypress
+#define CMD_LOGSTREAM_TIMEOUT_MS 50
+
+static void cmd_logstream(BaseSequentialStream *chp, int argc, char *argv[])
+{
+  (void)argv;
+  if (argc > 0) {
+    chprintf(chp, "Usage: logstream\r\n");
+  return;
+  }
+
+  chprintf(chp, "\r\nlogstream: system log output\r\n\r\n");
+
+  // While no key is pressed
+  while(chnGetTimeout((BaseChannel *)chp,TIME_IMMEDIATE) == Q_TIMEOUT)
+  {
+    char *s = logGetString(chTimeMS2I(CMD_LOGSTREAM_TIMEOUT_MS));
+    if(s != NULL)
+    {
+      chprintf(chp,s);
+      logReturnString(s);
+    }
+  }
+}
+
 static void cmd_example(BaseSequentialStream *chp, int argc, char *argv[]) {
 
   (void)argv;
@@ -19,6 +43,7 @@ static void cmd_example(BaseSequentialStream *chp, int argc, char *argv[]) {
 }
 
 static const ShellCommand commands[] = {
+                                        {"logstream", cmd_logstream},
                                         {"example", cmd_example},
                                         {NULL, NULL}
 };
@@ -37,6 +62,7 @@ void eshInit(void)
   sduObjectInit(&SDU1);
   sduStart(&SDU1, &serusbcfg);
 
+  logFIFOInit();
 
   /*
    * If the board was reset while connected to the commputer

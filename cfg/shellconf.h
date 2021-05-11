@@ -23,6 +23,13 @@
 #define SHELLCONF_H
 
 /**
+ * @brief   Shell Prompt String
+ */
+//#if !defined(SHELL_PROMPT_STR) || defined(__DOXYGEN__)
+#define SHELL_PROMPT_STR       "esh> "
+//#endif
+
+/**
  * @brief   Shell maximum input line length.
  */
 #if !defined(SHELL_MAX_LINE_LENGTH) || defined(__DOXYGEN__)
