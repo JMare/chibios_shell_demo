@@ -19,6 +19,7 @@
 
 #include "esh.h"
 #include "logstream.h"
+#include "led.h"
 
 /*
  * This is a periodic thread that does absolutely nothing except flashing
@@ -29,12 +30,15 @@ static THD_FUNCTION(Thread1, arg) {
 
   (void)arg;
   chRegSetThreadName("blinker");
+
+  ledSetDelay(1500);
+
   while (true) {
     XPRINTF("Blinking LED\r\n");
-    palSetPad(GPIOD, GPIOD_LED3);       /* Orange.  */
-    chThdSleepMilliseconds(500);
-    palClearPad(GPIOD, GPIOD_LED3);     /* Orange.  */
-    chThdSleepMilliseconds(500);
+    ledOn();
+    chThdSleepMilliseconds(ledGetDelay());
+    ledOff();
+    chThdSleepMilliseconds(ledGetDelay());
   }
 }
 

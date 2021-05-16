@@ -122,7 +122,7 @@ LDSCRIPT= $(STARTUPLD)/STM32F407xG.ld
 # setting.
 CSRC = $(ALLCSRC) \
        $(TESTSRC) \
-       usbcfg.c esh.c logstream.c main.c
+       usbcfg.c esh.c led.c logstream.c main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
